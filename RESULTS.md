@@ -404,3 +404,63 @@ which is the MoA field itself. Debiasing adds a further, consistent lift on top 
 undebiased enrichment (0.300 vs. 0.228, consistent across all 5 seeds, std 0.028-0.039), independent
 confirmation of the AUROC-based debiasing delta in Section 8, using a completely different label
 source than anything in training or evaluation.
+
+## 10. External validation of the headline epilepsy delta on an independent label source (repoDB)
+
+The limitation listed in Section 7 and in the paper's Discussion flagged that the epilepsy
+cold-bucket delta had not been checked against an independently constructed indication source.
+We ran that check. Script: `code/repodb_external_validation.py`, output
+`results/repodb_external_validation.csv`.
+
+**Data.** repoDB (Brown & Patel, *Scientific Data* 2017), approved-indication labels drawn from
+DrugCentral, independent of ChEMBL. Official static deposit, figshare DOI
+`10.6084/m9.figshare.3811674`, `full.csv` downloaded directly from
+`https://ndownloader.figshare.com/files/7341422` (md5 `61afd7c7adcfbc576c202e2fb05475b8`, matches
+the figshare API's recorded checksum), cached at `data/repodb/full.csv`. We take every row with
+`status == "Approved"` and `ind_name` matching `epilep|seizure|convulsi` (case-insensitive):
+32 unique drug names.
+
+**Matching and cross-check against the ChEMBL label (reported before the main test, not after).**
+23/32 (71.9%) of repoDB's epilepsy drugs resolve to a compound in our 9,878-compound LINCS library
+(name-normalized, hyphens/underscores treated as spaces); the rest are not in LINCS at all, a
+coverage limit of the compound library, not a matching failure. Of those 23: 20 already carry the
+ChEMBL-derived positive label used to train and evaluate the paper's models (87.0% agreement
+between two independently constructed label sources, itself a useful cross-check on the ChEMBL
+pipeline), 3 are new positives repoDB adds that our ChEMBL-based pipeline did not flag
+(nitrazepam, pentobarbital, pyridoxine), and 11 ChEMBL positives are not confirmed by repoDB
+(expected: repoDB's DrugCentral snapshot predates several 2015-and-later AED approvals, e.g.
+brivaracetam, cenobamate, and uses its own UMLS indication vocabulary).
+
+**The test.** Using the already-frozen out-of-fold scores in `results/oof_epilepsy.parquet`, no
+retraining, we swap the evaluation label from ChEMBL-derived `y` to repoDB-derived `y_repodb` and
+recompute the exact cold-bucket AUROC comparison Section 8's headline delta is built from.
+
+The repoDB label turns up only **5 unique compounds** in the cold bucket across all 5 seeds, the
+same 5 every time (acetazolamide, pyridoxine, stiripentol, tiagabine, topiramate): 4 of these were
+already ChEMBL-positive (so this is largely the same handful of drugs re-examined through a second
+label, not a fresh independent sample), and 1 (pyridoxine) is new.
+
+| Model | AUROC, ChEMBL label (this cold-bucket set) | AUROC, repoDB label |
+|---|---|---|
+| nn\_tanimoto | 0.425 ± 0.016 | 0.359 ± 0.001 |
+| fusion\_nodebias | 0.799 ± 0.053 | 0.859 ± 0.089 |
+| fusion\_full (proposed) | 0.915 ± 0.052 | 0.857 ± 0.057 |
+
+Debiasing delta (fusion\_full − fusion\_nodebias), per seed: under the ChEMBL label on this
+identical row set, `[0.117, 0.117, 0.117, 0.113, 0.113]`, mean **+0.115 ± 0.058**, reproducing the
+paper's reported +0.116 and confirming the pipeline is implemented correctly. Under the repoDB
+label, the same per-seed deltas are `[0.0, 0.101, -0.099, 0.011, -0.024]`, mean **-0.002 ± 0.072**.
+
+**Honest reading.** The debiasing delta does not replicate under this label swap, but this is not
+a clean contradiction either: with only 5 unique positive compounds, a one-compound change in
+which drugs count as positive (pyridoxine in, several newer ChEMBL-only AEDs out) is enough to
+move the AUROC by the entire effect size in either direction. The test is underpowered by
+construction, not by a fixable choice on our part: repoDB's drug coverage and the cold bucket's
+small positive count intersect in only 5 compounds, and that is as many as exist. The part of the
+paper's premise that does **not** depend on this small sample still holds under the repoDB label:
+nn\_tanimoto collapses to below-chance (0.359), and both fusion variants recover large absolute
+AUROC (0.86 ballpark) that nn\_tanimoto cannot reach. What does not survive this check is specifically
+the *debiasing increment* on top of that, the +0.116 claim itself, at least not at a sample size
+that could show it either way. We report this as a genuine limitation on how much weight the
+epilepsy headline number should carry, not as a refutation, since refutation would require a test
+that actually had the power to refute.
