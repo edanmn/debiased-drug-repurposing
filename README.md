@@ -6,8 +6,7 @@ reweighting scheme and a three-view gated fusion model (chemical structure, L100
 UniProt target-function text encoded with PubMedBERT).
 
 **Status: not yet published.** This README and the local commit history exist so the repository is
-ready to push in one step once the authors confirm it should be made public (see
-`paper/main.tex`'s `AUTHOR ACTION REQUIRED` blocks for the two open decisions that gate this).
+ready to push in one step once the authors confirm it should be made public.
 
 ## Layout
 
@@ -34,7 +33,7 @@ ready to push in one step once the authors confirm it should be made public (see
 - Replace the symlinked paths in `data/` with either the real files or a fetch script, so the
   repository is self-contained for an external reader (currently it depends on a sibling project's
   directory on the original author's machine).
-- Resolve the two `AUTHOR ACTION REQUIRED` items in `paper/main.tex`.
+- Resolve the remaining `AUTHOR ACTION REQUIRED` item in `paper/main.tex` (code-availability URL).
 - Confirm no large raw LINCS `.gctx` files or other multi-gigabyte intermediates are swept in by an
   unqualified `git add`.
 
