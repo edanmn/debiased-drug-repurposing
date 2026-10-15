@@ -365,3 +365,42 @@ modest, only weakly reliable cost on antibacterial and antineoplastic; and the r
 classes do not have enough cold-bucket positives to support any claim in either direction.** This
 is narrower and more defensible than both "debiasing helps across the board" and the unfiltered
 "helps 3/8, hurts 5/8" framing, and should replace it in the paper.
+
+## 9. Biological-interpretation positive control (addresses the rigor-review "no mechanism" gap)
+
+A real AUROC gain could still be an artifact of the feature set rather than evidence the model
+recovers anything pharmacologically sensible. We check this using the Broad Repurposing Hub's own
+mechanism-of-action (MoA) field in `data/targets.parquet`, a field the model never sees during
+training: neither the text view (built from UniProt target-function text, `code/build_text_view.py`)
+nor any other input references `moa` (grepped across `code/` to confirm). Script:
+`code/moa_positive_control.py`, output `results/moa_enrichment.csv`.
+
+**Keyword-set validation first, not assumed.** Of the 34 known AEDs in `data/known_aeds.csv`, 18
+resolve to a Hub MoA entry; of those, 14/18 (77.8%) contain one of `gaba`, `sodium channel`,
+`calcium channel`, `glutamate`, `potassium channel`, `sv2a`, against a 7.8% base rate across the
+full 2,290-compound MoA table (179/2,290). The four AEDs the keyword set misses are labeled by drug
+class rather than mechanism in the Hub field (carbamazepine, phenytoin, ethosuximide) or have a
+genuinely different, non-ion-channel mechanism (everolimus, mTOR inhibitor, correctly not
+matched). A roughly 10x enrichment on known AEDs is strong enough to treat the keyword set as a
+real, if imperfect, pharmacological plausibility signal.
+
+**The test.** Within the cold bucket (bottom NN-similarity tertile, pooled cutoff from
+`results/oof_epilepsy.parquet`, matching Section 3b) and restricted to true negatives (excluding
+already-known AEDs, so the check cannot simply rediscover the training labels), we take the top-50
+candidates per seed under three models and compute the MoA-keyword hit rate:
+
+| Model | Top-50 MoA-keyword rate (mean, 5 seeds) | std |
+|---|---|---|
+| nn\_tanimoto | 0.004 | 0.009 |
+| fusion\_nodebias | 0.228 | 0.039 |
+| fusion\_full (proposed) | **0.300** | 0.028 |
+| cold-bucket candidate base rate | 0.013 | 0.001 |
+
+The nearest-neighbor guide, exactly as the cold-bucket AUROC collapse in Section 3 predicts, does
+worse than the random base rate here: with no close structural neighbor to anchor on, its top-50 is
+essentially noise with respect to mechanism. Both fusion variants recover a strong, non-circular
+signal (17-23x the base rate) using only structure, expression, and target-function text, none of
+which is the MoA field itself. Debiasing adds a further, consistent lift on top of the already-large
+undebiased enrichment (0.300 vs. 0.228, consistent across all 5 seeds, std 0.028-0.039), independent
+confirmation of the AUROC-based debiasing delta in Section 8, using a completely different label
+source than anything in training or evaluation.
