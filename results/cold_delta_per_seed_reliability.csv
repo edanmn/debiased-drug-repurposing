@@ -1,0 +1,10 @@
+disease,mean_cold_n_pos_per_seed,n_seeds_usable,mean_delta,std_delta,mean_fusion_full,mean_fusion_nodebias
+epilepsy,6.2,5,0.1155,0.0584,0.915,0.799
+antibacterial,6.2,5,-0.0277,0.0215,0.866,0.894
+antidiabetic,2.2,5,0.0206,0.0189,0.994,0.973
+antineoplastic,26.0,5,-0.0237,0.0481,0.825,0.849
+antipsychotic,0.4,0,,,,
+betablocker,0.0,0,,,,
+depression,0.2,0,,,,
+lipid,2.2,5,-0.0827,0.1762,0.465,0.548
+nsaid,1.6,2,0.0343,0.0497,0.956,0.922

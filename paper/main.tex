@@ -1,0 +1,133 @@
+\documentclass{llncs}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Repurposing Beyond the Nearest Analog: Debiasing Drug-Indication Models Against Chemical-Similarity Shortcuts}
+
+% RECOMB 2027 is single-blind review; anonymization is not required or wanted. Replace with real author names/affiliations before submission.
+\author{[AUTHOR NAMES]}
+\institute{[AFFILIATION] --- submitted to RECOMB 2027}
+
+\maketitle
+
+\begin{abstract}
+A zero-training nearest-neighbor chemical-similarity search already predicts a drug's indication well when that drug has a close analog among known treatments; across nine therapeutic classes in our data it averages 0.865 AUROC with no training at all. Its accuracy collapses, however, on drugs with no close known analog, down to 0.21--0.46 AUROC on four of the nine classes, which is exactly where a repurposing model needs to work. We adapt DebiasedDTA, a guide/predictor reweighting scheme built for drug-target binding-affinity prediction, to drug-indication prediction, training a three-view model (chemical structure, L1000 gene expression, and a text encoding of each drug's target function) to specifically target the signal this similarity shortcut cannot explain. The reweighting gives a clear, relatively reliable benefit on the class that motivated this study, epilepsy (+0.116 cold-bucket AUROC over an otherwise identical undebiased model), a small benefit on one other class, a modest cost on two more, and no usable signal either way on the remaining five, whose cold buckets turn out to contain too few positives per fold to support any claim. We report this mixed picture directly rather than as a uniform win, alongside a leakage audit confirming why literature about the drug itself cannot be used as a feature: PubMed abstracts predict a drug's eventual indication at 0.96 AUROC even before approval, almost entirely through mentions of other same-class drugs.
+\end{abstract}
+
+\section{Introduction}
+\textbf{[AUTHOR ACTION REQUIRED, remove before submission: the near-analog/novel-scaffold confound this paper is built on, including the nearest-neighbor-search baseline framing and the specific finding that models trained on structure retrieve close analogues of known drugs, is also the headline content of this group's own manuscript ``How Much Do Evaluation Choices Inflate Transcriptomic Drug Repurposing? A Measured Audit on LINCS L1000'' (\texttt{ICHI2027\_mgan/paper/main.tex}), currently marked as under double-blind review. See the identical flag in the companion paper (idea2\_area\_debiasing) for the fuller explanation; the same resolution decision applies here before this can be submitted.]}
+
+Drug repurposing models are usually scored on how well they rank known treatments above everything else, and a large part of that score is explained by chemistry alone. In our data, a nearest-neighbor search over ECFP4 fingerprints, with no training, scoring each candidate by its maximum Tanimoto similarity to a known positive, already averages 0.865 AUROC across nine therapeutic classes (epilepsy, depression, antipsychotics, antibacterials, antidiabetics, antineoplastics, lipid-lowering drugs, NSAIDs, and antihypertensives). This is not a trivial baseline to beat, because much of it is not wrong: drugs really do cluster by mechanism, and a new analog of a known treatment really is a reasonable candidate. The question this paper asks is what happens on the drugs that do not have a close known analog, since those are the ones a repurposing model is actually for.
+
+On that subset the picture changes sharply. Stratifying each class's test compounds by their similarity to the training positives and looking at the bottom tertile, the nearest-neighbor search's AUROC falls to 0.21 on NSAIDs, 0.43 on epilepsy, 0.44 on antibacterials, and 0.46 on antineoplastics, each close to or below chance. A model that only reproduces this shortcut will fail exactly where repurposing matters most. We ask whether a model can be trained specifically against this known bias, using a guide/predictor reweighting scheme from DebiasedDTA~\cite{ozcelik2023debiaseddta}, originally built to debias binding-affinity prediction against chemical similarity, retargeted here at a different bias (chemical analog similarity to known indications, rather than structure-activity relationships in a binding assay) and a different task (indication classification, rather than affinity regression). We add two further sources of signal beyond chemistry: L1000 gene-expression profiles, and a text view that encodes what each drug's known target does, from UniProt function descriptions, via a biomedical language model, so that two drugs can be connected through target function even when no training example ever saw that exact target with a positive label.
+
+A model that uses text about the drug itself, rather than about its target, would appear to solve this problem trivially and incorrectly: we show that PubMed abstracts mentioning a drug predict its eventual indication at 0.96 AUROC even when restricted to literature published before that drug's own approval date, and that masking the obvious disease-defining terms barely changes this, because the remaining signal is mentions of other, already-approved drugs in the same class. We exclude this feature deliberately and report the audit that justifies doing so.
+
+\section{Related Work}
+
+\paragraph{Debiasing drug-target and drug-repurposing models.}
+DebiasedDTA~\cite{ozcelik2023debiaseddta} introduced a two-stage guide/predictor framework for drug-target affinity prediction: a low-capacity guide model is cross-validated on the training set to produce per-sample importance coefficients, and the predictor is trained with sample weights that interpolate from uniform toward those coefficients over training. It was evaluated only on binding-affinity regression (BindingDB-derived and KIBA benchmarks), and its own discussion explicitly flags extension to other prediction tasks as open. A companion software release, pydebiaseddta~\cite{barsbey2023pydebiaseddta}, made the framework reusable with arbitrary guide/predictor pairs. TAPB~\cite{tapb2025} extends debiasing-for-generalization within drug-target interaction prediction, but targets protein-target popularity bias through an interventional/causal correction, not chemical-analog bias, and still predicts binding/interaction rather than disease indication. The closest work combining debiasing with drug \emph{repositioning} is DRDM~\cite{meng2025drdm}, which reweights drug-disease graph edges during GNN training to counteract node-degree/popularity bias; its bias target (a few popular drugs/diseases dominating the association graph) and mechanism (graph-structural reweighting) are both distinct from the chemical nearest-neighbor-analog bias and guide/predictor design used here. We are not aware of prior work that uses a chemical-similarity nearest-neighbor model as a DebiasedDTA-style guide for indication-level prediction.
+
+\paragraph{Chemical similarity as an evaluation confound.}
+Independent of the debiasing literature, several papers have observed that similarity between train and test compounds inflates apparent performance in molecular prediction tasks: scaffold splits still leave substantial train-test similarity~\cite{scaffoldsplits2024}, and similarity-aware evaluation protocols reveal that standard splits dominate reported performance under random assignment~\cite{similarityaware2025}. Guney~\cite{guney2017reproducible} made a version of this argument specifically for drug repurposing, showing that many reported successes reduce to near-duplicate recovery. The activity-cliff literature~\cite{vantilborg2022activitycliffs} shows the opposite failure mode is also real: chemical similarity can be actively misleading, not just uninformative. We build on this diagnosis but target a training-time correction rather than only an evaluation-time audit.
+
+\paragraph{Gene-expression and protein-function-text views.}
+LINCS L1000~\cite{subramanian2017l1000} gene-expression signatures are widely used for repurposing and compound screening, including learned models that predict L1000-style profiles for compounds with no expression measurement~\cite{pham2021deepce}. TxGNN~\cite{huang2024txgnn} is a prominent recent repurposing baseline, but its zero-shot construct is disease-centric (unseen diseases in a knowledge graph), not chemistry-centric (unseen scaffolds), which we account for when using it as a reference point rather than a strictly apples-to-apples ablation. Chemprop~\cite{yang2019chemprop,heid2024chemprop} is the standard open-source directed message-passing baseline for molecular property prediction. Encoding free-text functional descriptions of proteins (rather than only identifiers) has been shown to improve zero-shot generalization to unseen protein classes~\cite{stargo2025,deepgozero2022}; we apply the analogous idea to drug targets.
+
+\paragraph{Label leakage in biomedical prediction.}
+Label leakage through indirect textual or coded proxies for the outcome is a documented failure mode in clinical machine learning~\cite{labelleakage2023jamia,labelleakage2025jama}. We show a version of this specific to our setting and use it to justify excluding drug-literature text as a feature.
+
+\section{Data}
+We use nine ChEMBL-derived~\cite{gaulton2017chembl,zdrazil2024chembl} therapeutic-class indication labels (epilepsy, antibacterials, antidiabetics, antineoplastics, antipsychotics, betablockers as an antihypertensive proxy, depression, lipid-lowering drugs, and NSAIDs) over the 9{,}878-compound LINCS~\cite{subramanian2017l1000} library, with ECFP4 structural fingerprints and consensus L1000 landmark-gene expression signatures for every compound. Target annotations come from the Drug Repurposing Hub~\cite{corsello2017repurposinghub}, joined to our compound set by name: 2{,}290 compounds carry a non-null target field, spanning 1{,}392 unique human target genes. For each of these genes we fetch its UniProt~\cite{uniprot2023} function-description text directly from the UniProt REST API; 1{,}385 of 1{,}392 genes (99.5\%) return a usable function comment, giving a text-view embedding for 2{,}286 of the 2{,}290 target-annotated compounds. The remaining 7{,}588 compounds, which carry no Hub target annotation, receive an explicit zero vector and an availability mask rather than a learned placeholder, so the model can tell the difference between "no target signal" and "target signal of zero."
+
+\section{Method}
+Each compound is scored by a guide and a predictor. The guide is the same nearest-neighbor Tanimoto-similarity score used as the zero-training baseline in Section~\ref{sec:intro}: a one-feature logistic regression wrapping this score is cross-validated within each outer training fold, five repeats of five-fold inner cross-validation, to produce an out-of-fold squared-error-based importance coefficient for every training example, normalized to mean one. Examples the similarity guide already explains well get a low coefficient; examples it cannot explain get a high one. This is the DebiasedDTA~\cite{ozcelik2023debiaseddta} mechanism, retargeted from a binding-affinity guide/predictor pair to an indication-classification one.
+
+The predictor is a three-view gated fusion model. Each view, chemical structure (ECFP4, 2{,}048-dimensional), L1000 expression (978-dimensional), and target-function text (PubMedBERT embedding, 768-dimensional, with an availability mask), is encoded by its own small MLP, and the resulting view embeddings are combined through a learned per-sample softmax gate restricted to the views actually available for that compound; the text view is excluded from the gate entirely for compounds with no target annotation, rather than zeroed and left in. The model is trained with a binary cross-entropy loss whose per-sample weights interpolate linearly from uniform, at the first epoch, to the guide's importance coefficients, at the last, the same convex-combination schedule DebiasedDTA uses. Each continuous view is standardized on training-fold statistics only; an earlier version of this pipeline fed unnormalized text and expression features into the MLP and produced a text-only ablation with AUROC below chance despite the feature being genuinely informative, which training-fold standardization fixed.
+
+\section{Experiments}
+\label{sec:experiments}
+\subsection{Evaluation protocol}
+\label{sec:intro}
+We use Murcko-scaffold-grouped stratified five-fold cross-validation, five seeds, for all nine classes, 225 outer folds per model variant. Following DebiasedDTA's own warm/cold framing, we stratify each fold's test compounds by their nearest-neighbor Tanimoto similarity to that fold's training positives into warm (top tertile) and cold (bottom tertile) buckets, since this is the more theoretically appropriate test of whether debiasing helps: it is designed to improve exactly the cold, low-similarity cases, not to raise an overall AUROC dominated by easy warm ones.
+
+\subsection{Main results}
+Table~\ref{tab:headline} reports cross-class mean AUROC for the zero-training nearest-neighbor guide, plain ECFP4 baselines, the target-text-only ablation, and the proposed three-view debiased fusion model, against an otherwise identical undebiased ablation.
+
+\begin{table}[t]
+\centering
+\caption{Cross-class mean AUROC, pooled over 5 scaffold-CV seeds (per-class numbers in \texttt{results/headline\_mean\_std\_auroc.csv}).}
+\label{tab:headline}
+\begin{tabular}{lcccccc}
+\toprule
+nn\_tanimoto & lr\_ecfp & xgb\_ecfp & text\_only & fusion\_struct & fusion\_nodebias & fusion\_full \\
+\midrule
+0.865 & 0.857 & 0.917 & 0.733 & 0.818 & 0.913 & \textbf{0.913} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The zero-training guide is already strong (0.865 mean AUROC), confirming the premise that near-analog similarity explains a large share of apparent accuracy; it is weakest specifically on epilepsy and antineoplastics, the two most scaffold-diverse classes, and strongest on antipsychotics and betablockers, where a few tight chemical series dominate. The proposed fusion model beats the guide on seven of nine classes, with the largest margins on antineoplastics (+0.171) and epilepsy (+0.119). At the pooled-AUROC level, however, debiasing itself (fusion\_full against fusion\_nodebias, an otherwise identical model trained with uniform sample weights) makes almost no difference, 0.913 against 0.913: this is expected, since pooled AUROC is dominated by the easy warm majority of each class, and is not the metric debiasing is designed to move.
+
+\subsection{Does debiasing help where it should: the cold bucket}
+Figure~\ref{fig:warmcold} shows AUROC separately for the warm and cold tertiles. The guide's own cold-bucket collapse is stark and class-dependent: 0.21 on NSAIDs, 0.44 on antibacterials, 0.43 on epilepsy, 0.46 on antineoplastics, each near or below chance, against 0.74--0.97 in the warm tertile of the same classes. This is the central premise of the paper, confirmed directly rather than assumed.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{warm_cold_auroc.png}
+\caption{AUROC by class, warm (top similarity tertile) and cold (bottom tertile) test compounds. Betablocker's cold tertile is omitted: its chemistry is dominated by one tight scaffold family, leaving too few genuinely low-similarity compounds to score.}
+\label{fig:warmcold}
+\end{figure}
+
+Whether the debiased model (fusion\_full) improves on the undebiased one (fusion\_nodebias) specifically in the cold bucket is the real test of the method, and pooling all five seeds together before checking gives a misleading answer, because it hides how many cold-bucket positive examples back each number. Recomputing the fusion\_full-minus-fusion\_nodebias delta per seed from the five scaffold folds within that seed, rather than pooled across all 25, surfaces this directly (Table~\ref{tab:cold-reliability}): three classes, antipsychotics, depression, and betablockers, average under one cold-bucket positive example per seed, which makes any AUROC computed on them uninterpretable regardless of its value, and two more, NSAIDs and lipid-lowering drugs, remain too data-starved for the sign of their delta to be distinguished from seed-to-seed noise.
+
+\begin{table}[t]
+\centering
+\caption{Cold-bucket debiasing delta (fusion\_full $-$ fusion\_nodebias AUROC), computed per seed rather than pooled, with the mean number of cold-bucket positive examples available per seed. Classes with under $\sim$2 positives per seed on average cannot support a directional claim regardless of the delta shown.}
+\label{tab:cold-reliability}
+\begin{tabular}{lccc}
+\toprule
+Class & mean cold $n_{\text{pos}}$/seed & mean delta & std delta \\
+\midrule
+epilepsy & 6.2 & \textbf{+0.116} & 0.058 \\
+antidiabetic & 2.2 & +0.021 & 0.019 \\
+antineoplastic & 26.0 & $-$0.024 & 0.048 \\
+antibacterial & 6.2 & $-$0.028 & 0.022 \\
+nsaid & 1.6 (2/5 seeds usable) & +0.034 & 0.050 \\
+lipid & 2.2 & $-$0.083 & 0.176 \\
+antipsychotic & 0.4 (0/5 usable) & n/a & n/a \\
+depression & 0.2 (0/5 usable) & n/a & n/a \\
+betablocker & 0.0 (0/5 usable) & n/a & n/a \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Of the four classes with enough cold-bucket positives per seed to say anything, epilepsy, the class that motivated this study, shows a clear and relatively reliable benefit from debiasing: a mean delta of +0.116 against a standard deviation of 0.058 across five seeds, roughly twice its own noise. Antidiabetic shows a small positive effect of similar reliability. Antibacterial and antineoplastic show modest negative effects, and antineoplastic's delta, despite having the largest cold-bucket sample of any class (26 positives per seed), is under one standard deviation from zero and so is not clearly distinguishable from noise either. The defensible claim is narrower than either "debiasing helps across the board" or an unfiltered count of how many classes move in which direction: debiased reweighting gives a real, meaningful benefit on the motivating class and a smaller one on a second class, a modest and only weakly reliable cost on two more, and the remaining five classes simply do not have enough low-similarity examples in this dataset to test the method at all.
+
+As a robustness check on the tertile cutoff itself, we recomputed the same comparison using an independently defined bottom two quintiles (bottom 40\% by similarity, pooled across all five seeds rather than computed per seed, from \texttt{results/similarity\_quintile\_auroc.csv}) instead of the bottom tertile. The pattern reproduces: epilepsy's delta is +0.156 on a pooled 31 cold-bucket positives, consistent in sign and magnitude with the per-seed tertile estimate above, and every other class keeps the same sign as in Table~\ref{tab:cold-reliability} (antidiabetic, antibacterial, antineoplastic, nsaid, lipid all within a few points of their tertile-based delta). This is not a search for the most favorable cutoff, since we checked it after writing the tertile-based numbers above specifically to test whether they were an artifact of where the tertile boundary happens to fall; they are not.
+
+\subsection{Leakage audit}
+A natural fourth view would be literature about the drug itself, rather than about its target. We show why this is the wrong feature to use. For 30 known antiepileptic drugs and 29 non-antiepileptic drugs approved for antineoplastic or depression indications, we pulled PubMed abstracts mentioning each drug's name, restricted via NCBI E-utilities date filters to strictly before that drug's own approval year; 11 of the resulting 59 candidates, mostly pre-1960s drugs with sparse MEDLINE coverage, had no usable pre-approval text and were dropped, leaving a 59-drug corpus. A TF-IDF bag-of-words logistic regression, five-fold cross-validated, predicts the eventual antiepileptic label from this pre-approval text at 0.959 AUROC (Figure~\ref{fig:leakage}). Masking the obvious disease-defining terms (\emph{epilep*}, \emph{seizur*}, \emph{anticonvulsant*}, \emph{antiepileptic*}, \emph{convulsant*}, \emph{convulsion*}, \emph{AEDs?}) barely changes this, 0.953 AUROC, and the coefficients driving the masked model are almost entirely names of other antiepileptic drugs: lorazepam, midazolam, diazepam, carbamazepine, gabapentin, valproate, clonazepam, vigabatrin. A drug's pre-approval literature predicts its eventual indication not because the text reveals pharmacology, but because papers about a future antiepileptic drug already co-mention other, already-approved antiepileptics as comparators. This is the same same-class-mention leakage mechanism documented for diagnosis codes in clinical prediction~\cite{labelleakage2023jamia,labelleakage2025jama}, transposed to drug-name co-occurrence in biomedical text, and it is why we exclude drug-literature text from the model's feature set rather than include it and rely on a held-out split to catch the leak.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.6\textwidth]{leakage_audit.png}
+\caption{Five-fold cross-validated AUROC for predicting a drug's eventual antiepileptic label from PubMed abstracts published strictly before its own approval date, with and without disease-defining terms masked ($n=59$).}
+\label{fig:leakage}
+\end{figure}
+
+\section{Discussion and Limitations}
+The central premise holds directly: a zero-training chemical-similarity search accounts for most of the apparent accuracy of a repurposing model, and its accuracy is close to or below chance on the novel-scaffold compounds a repurposing method is actually meant to find. Debiased reweighting against this known shortcut is not, in our implementation, a uniform fix across therapeutic areas; it is a real, meaningfully-sized benefit on the class that motivated the study and a smaller one on a second class, with the remaining classes either showing a modest, weakly-reliable cost or lacking enough low-similarity examples to test the method at all. We think the honest version of this result, that a debiasing method can work clearly on the case that motivated it without working uniformly everywhere, is more useful to the field than either extreme, and we report the per-class reliability breakdown specifically so this nuance is not lost in a single pooled number.
+
+Several limitations should guide how much weight the current numbers carry. The fusion model encodes every view, including the 2{,}048-dimensional sparse binary ECFP4 structure view, through an MLP, while the strongest plain-chemistry baseline (xgb\_ecfp) uses a tree ensemble, a model class generally better suited to sparse binary features; Table~\ref{tab:headline} shows xgb\_ecfp beating fusion\_struct, the MLP-only structure ablation, on most classes. Comparisons between the fusion variants themselves are controlled for this, since they share the same architecture, but the comparison against xgb\_ecfp is not, and part of the margin the full model shows over xgb\_ecfp in Section~\ref{sec:experiments} could reflect the additional views rather than being cleanly separable from architecture choice. All results in this paper come from one compound library (LINCS) and one indication source (ChEMBL); we have not checked whether the cold-bucket findings, particularly the epilepsy effect this paper is built around, replicate on an independently constructed repurposing benchmark. We also have not checked whether the gate or the text view's learned weights recover known pharmacology, for instance by favoring ion-channel or GABA-receptor-related target functions specifically for epilepsy candidates; such a check would double as a positive control on the pipeline and is left for future work. The Chemprop baseline ran on a reduced protocol, one seed and two of five scaffold folds at 15 epochs, because full-scale D-MPNN training proved CPU-bound on the shared machine used for this work, and its fold-to-fold variance (e.g.\ epilepsy 0.832 against 0.432) reflects that reduction rather than a stable estimate; a tighter number would need a full rerun. TxGNN was not run: no official pretrained checkpoint was available within the time budget, and in any case its zero-shot construct, unseen diseases in a knowledge graph, is not the same as this paper's unseen-scaffold construct, so even a successful run would answer a different question. The guide's own cross-validation used five repeats rather than DebiasedDTA's original ten, for compute budget. The pooled bootstrap confidence intervals in our results treat non-independent resamples of the same compounds across folds and seeds as though they were independent, which understates true uncertainty; we use the per-seed mean and standard deviation, not these pooled intervals, as the basis for every claim in this paper. Finally, the leakage audit's 59-drug corpus is small by construction, since a strictly pre-approval-date text corpus cannot be made arbitrarily large; its conclusion, that masking obvious terms barely moves the AUROC, is clear, but the exact point estimate should not be read as precise.
+
+\paragraph{Code availability.} \textbf{[AUTHOR ACTION REQUIRED, remove before submission: RECOMB 2027 requires a public, documented code repository linked in the paper for any submission developing new methods, as this one does. Replace this paragraph with the actual repository URL once one is published.]}
+
+\bibliographystyle{splncs04}
+\bibliography{refs}
+
+\end{document}

@@ -1,0 +1,3 @@
+condition,auroc,n,n_pos
+unmasked,0.9586206896551724,59,30
+masked,0.9528735632183908,59,30

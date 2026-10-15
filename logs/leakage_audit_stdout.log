@@ -1,0 +1,73 @@
+Cohort: 33 AED positives, 33 non-AED negatives
+  carbamazepine (label=1, approved 1974): 17297 chars fetched
+  phenytoin (label=1, approved 1938): 0 chars fetched
+  valproic acid (label=1, approved 1978): 16231 chars fetched
+  valproate (label=1, approved 1978): 35730 chars fetched
+  phenobarbital (label=1, approved 1912): 0 chars fetched
+  primidone (label=1, approved 1954): 196 chars fetched
+  ethosuximide (label=1, approved 1960): 0 chars fetched
+  lamotrigine (label=1, approved 1994): 115061 chars fetched
+  levetiracetam (label=1, approved 1999): 100071 chars fetched
+  oxcarbazepine (label=1, approved 2000): 120136 chars fetched
+  topiramate (label=1, approved 1996): 54008 chars fetched
+  gabapentin (label=1, approved 1993): 31400 chars fetched
+  pregabalin (label=1, approved 2004): 136935 chars fetched
+  zonisamide (label=1, approved 2000): 110092 chars fetched
+  lacosamide (label=1, approved 2008): 72768 chars fetched
+  perampanel (label=1, approved 2012): 27079 chars fetched
+  brivaracetam (label=1, approved 2016): 129373 chars fetched
+  eslicarbazepine (label=1, approved 2013): 128747 chars fetched
+  rufinamide (label=1, approved 2008): 53600 chars fetched
+  vigabatrin (label=1, approved 1989): 45984 chars fetched
+  tiagabine (label=1, approved 1997): 127152 chars fetched
+  felbamate (label=1, approved 1993): 38851 chars fetched
+  clobazam (label=1, approved 2011): 122723 chars fetched
+  clonazepam (label=1, approved 1975): 13347 chars fetched
+  diazepam (label=1, approved 1963): 1723 chars fetched
+  lorazepam (label=1, approved 1977): 45528 chars fetched
+  midazolam (label=1, approved 1985): 64062 chars fetched
+  cannabidiol (label=1, approved 2018): 147760 chars fetched
+  cenobamate (label=1, approved 2019): 5182 chars fetched
+  everolimus (label=1, approved 2010): 141034 chars fetched
+  stiripentol (label=1, approved 2018): 158777 chars fetched
+  fenfluramine (label=1, approved 2020): 149805 chars fetched
+  ganaxolone (label=1, approved 2022): 160067 chars fetched
+  hydroxyurea (label=0, approved 1967): 16329 chars fetched
+  panobinostat (label=0, approved 2015): 140021 chars fetched
+  sunitinib (label=0, approved 2006): 46134 chars fetched
+  idarubicin (label=0, approved 1990): 73899 chars fetched
+  thioguanine (label=0, approved 1966): 17045 chars fetched
+  cladribine (label=0, approved 1993): 414 chars fetched
+  alectinib (label=0, approved 2015): 51411 chars fetched
+  mitotane (label=0, approved 1970): 0 chars fetched
+  talazoparib (label=0, approved 2018): 105520 chars fetched
+  methotrexate (label=0, approved 1953): 0 chars fetched
+  imatinib (label=0, approved 2001): 4672 chars fetched
+  sertraline (label=0, approved 1991): 73520 chars fetched
+  fluvoxamine (label=0, approved 1994): 77417 chars fetched
+  olaparib (label=0, approved 2014): 127624 chars fetched
+  PF-03084014 (label=0, approved 2023): 108099 chars fetched
+  vortioxetine (label=0, approved 2013): 12609 chars fetched
+  valrubicin (label=0, approved 1998): 0 chars fetched
+  nilotinib (label=0, approved 2007): 41719 chars fetched
+  pralatrexate (label=0, approved 2009): 28604 chars fetched
+  gemcitabine (label=0, approved 1996): 109319 chars fetched
+  nefazodone (label=0, approved 1994): 23492 chars fetched
+  pazopanib (label=0, approved 2009): 48714 chars fetched
+  trazodone (label=0, approved 1981): 34861 chars fetched
+  nortriptyline (label=0, approved 1964): 1384 chars fetched
+  paroxetine (label=0, approved 1992): 99755 chars fetched
+  azacitidine (label=0, approved 2004): 44544 chars fetched
+  homoharringtonine (label=0, approved 2009): 106953 chars fetched
+  imipramine (label=0, approved 1959): 690 chars fetched
+  sorafenib (label=0, approved 2005): 10832 chars fetched
+  LGX-818 (label=0, approved 2018): 3174 chars fetched
+  paclitaxel (label=0, approved 1992): 0 chars fetched
+  temoporfin (label=0, approved 2001): 30743 chars fetched
+  tivozanib (label=0, approved 2017): 108958 chars fetched
+Final corpus size: 59 drugs with usable text (30 AED positives, 29 negatives)
+=== UNMASKED AUROC: 0.9586206896551724 ===
+Top positive-class terms (unmasked): [('epilepsy', 1.1403201705919939), ('seizures', 0.753036961875526), ('antiepileptic', 0.5540178093491475), ('seizure', 0.44983532254505704), ('drugs', 0.44609181759252314), ('carbamazepine', 0.42927133045859717), ('gaba', 0.42525120610340084), ('gabapentin', 0.4106208776370738), ('lorazepam', 0.3884554280477526), ('midazolam', 0.37013249140956606), ('diazepam', 0.3581424633810947), ('aeds', 0.348375679929213), ('bmj', 0.33965839586302093), ('valproate', 0.33916592062417417), ('drug', 0.29898396159006113)]
+=== MASKED AUROC: 0.9528735632183908 ===
+Top positive-class terms (masked): [('maskedterm', 2.6040840982055946), ('lorazepam', 0.4233189014121057), ('midazolam', 0.406259757270472), ('diazepam', 0.3753391856260394), ('carbamazepine', 0.3565232345499705), ('bmj', 0.32415128692953804), ('gaba', 0.3107280540439918), ('gabapentin', 0.30686030579681123), ('drugs', 0.27375213310713387), ('cannabis', 0.24535458227384022), ('valproate', 0.23164845552742924), ('neuropsychiatr', 0.22824703959317338), ('cbd', 0.2243133917096463), ('clonazepam', 0.20914349967818385), ('vigabatrin', 0.20224302521764626)]
+Wrote leakage_audit_summary.csv and top_terms files

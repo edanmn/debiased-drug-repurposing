@@ -1,0 +1,1 @@
+{"results": [{"entryType": "UniProtKB reviewed (Swiss-Prot)", "primaryAccession": "Q8TET4", "genes": [{"geneName": {"value": "GANC"}}], "comments": [{"texts": [{"evidences": [{"evidenceCode": "ECO:0000269", "source": "PubMed", "id": "12370436"}], "value": "Has alpha-glucosidase activity"}], "commentType": "FUNCTION"}], "extraAttributes": {"uniParcId": "UPI00001FE303"}}]}

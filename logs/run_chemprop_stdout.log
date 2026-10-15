@@ -1,0 +1,488 @@
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+You are using a CUDA device ('NVIDIA GeForce RTX 3090') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[epilepsy] chemprop seed=0 fold=0 auroc=0.832 (74.8s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[epilepsy] chemprop seed=0 fold=1 auroc=0.432 (71.2s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antibacterial] chemprop seed=0 fold=0 auroc=0.877 (75.6s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antibacterial] chemprop seed=0 fold=1 auroc=0.903 (71.3s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antidiabetic] chemprop seed=0 fold=0 auroc=0.750 (69.8s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antidiabetic] chemprop seed=0 fold=1 auroc=0.765 (71.9s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antineoplastic] chemprop seed=0 fold=0 auroc=0.835 (71.0s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antineoplastic] chemprop seed=0 fold=1 auroc=0.757 (70.8s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antipsychotic] chemprop seed=0 fold=0 auroc=0.855 (70.3s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[antipsychotic] chemprop seed=0 fold=1 auroc=0.997 (66.0s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[betablocker] chemprop seed=0 fold=0 auroc=0.988 (65.1s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[betablocker] chemprop seed=0 fold=1 auroc=0.947 (66.1s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[depression] chemprop seed=0 fold=0 auroc=0.731 (65.1s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[depression] chemprop seed=0 fold=1 auroc=0.865 (65.4s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[lipid] chemprop seed=0 fold=0 auroc=0.851 (63.8s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[lipid] chemprop seed=0 fold=1 auroc=0.818 (63.9s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[nsaid] chemprop seed=0 fold=0 auroc=0.837 (63.4s)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/configuration_validator.py:70: You defined a `validation_step` but have no `val_dataloader`. Skipping val loop.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type                    ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ message_passing │ BondMessagePassing      │  227 K │ train │     0 │
+│ 1 │ agg             │ MeanAggregation         │      0 │ train │     0 │
+│ 2 │ bn              │ BatchNorm1d             │    600 │ train │     0 │
+│ 3 │ predictor       │ BinaryClassificationFFN │ 90.6 K │ train │     0 │
+│ 4 │ X_d_transform   │ Identity                │      0 │ train │     0 │
+└───┴─────────────────┴─────────────────────────┴────────┴───────┴───────┘
+Trainable params: 318 K                                                         
+Non-trainable params: 0                                                         
+Total params: 318 K                                                             
+Total estimated model params size (MB): 1.276                                   
+Modules in train mode: 21                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+`Trainer.fit` stopped: `max_epochs=15` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/rishik/.local/lib/python3.12/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'predict_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=23` in the `DataLoader` to improve performance.
+[nsaid] chemprop seed=0 fold=1 auroc=0.839 (62.0s)
+Wrote results/chemprop_folds.csv

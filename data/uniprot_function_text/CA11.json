@@ -1,0 +1,1 @@
+{"results": [{"entryType": "UniProtKB reviewed (Swiss-Prot)", "primaryAccession": "O75493", "genes": [{"geneName": {"value": "CA11"}, "synonyms": [{"value": "CARP2"}], "orfNames": [{"value": "UNQ211/PRO237"}]}], "comments": [{"texts": [{"value": "Does not have a catalytic activity"}], "commentType": "FUNCTION"}], "extraAttributes": {"uniParcId": "UPI000004C652"}}]}
