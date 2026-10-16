@@ -562,3 +562,52 @@ definition as throughout this paper):
   considers either adaptation an unfaithful reproduction should read Table above as a bound on
   what we could test given the mismatch, not a claim about DRDM's or TAPB's performance on their
   own published benchmarks.
+
+## 12. External review pass: corrections and the text-availability shortcut check
+
+A simulated adversarial RECOMB review (fresh read of the final paper, no prior context) checked
+every number against its source file and raised several points, addressed below.
+
+**Two verified numeric errors, now fixed.** Table "headline"'s claim that `fusion_full` beats
+`nn_tanimoto` on "seven of nine classes," with margins of +0.171 (antineoplastic) and +0.119
+(epilepsy), did not match `results/headline_mean_std_auroc.csv`: recomputing directly gives six
+of nine classes (not antibacterial, antipsychotic, betablocker), and margins of +0.168 and
++0.112. The paper's prose was drafted against an earlier run than the one checked into the
+repository; fixed to the current numbers. The leakage-audit paragraph separately conflated the
+post-drop evaluated cohort (59 drugs) with the pre-drop candidate pool (66, of which 7 lacked
+usable pre-approval text and were dropped), previously fixed in an earlier pass of this same kind.
+
+**MoA independence, reworded.** The biological-interpretation check's claim that "no input
+references" the MoA field was true of the literal field but overstated independence: the text
+view's UniProt target-function description and the Hub's MoA label both trace back to the same
+annotated target, so only the structure and expression views are genuinely independent of it.
+The paper now says this explicitly rather than implying all three views are independent checks.
+
+**Text-availability shortcut, tested directly.** The review raised a specific, checkable concern:
+epilepsy positives carry a Hub target annotation far more often than negatives (22/31 vs.
+2,264/9,847, already noted in section 2 above as the source of an earlier normalization bug), and
+the fusion gate (`fusion_model.py`) feeds the raw availability bit into the gate as an input
+feature, not just a hard on/off switch, so the text view's apparent contribution could come from
+merely having an annotation rather than from what the annotation says.
+
+`code/text_availability_shortcut_check.py` tests this directly on epilepsy (5 seeds x 5 scaffold
+folds): keep the true availability mask exactly as is, but shuffle which real text embedding each
+annotated compound receives, disjointly within train and within test, so the true compound-content
+correspondence is broken while the true availability pattern and its correlation with the label
+are preserved. Result:
+
+| Model | mean AUROC | std |
+|---|---|---|
+| fusion_full (uniform weights), real text | 0.827 | 0.112 |
+| fusion_full (uniform weights), shuffled text | 0.648 | 0.156 |
+| fusion, structure+expression, no text view | 0.647 | 0.125 |
+| text_only, real text | 0.641 | 0.143 |
+| text_only, shuffled text | 0.262 | 0.116 |
+
+Shuffled-content fusion (0.648) lands at essentially the same level as the no-text ablation
+(0.647), not near the real-content fusion (0.827): the gain is coming from what the text says,
+not from the mere fact that a compound has an annotation at all, which is a clean negative result
+for the shortcut hypothesis. (Note: this script uses uniform sample weights throughout, matching
+`fusion_nodebias`'s setup, not the DebiasedDTA-reweighted `fusion_full`; it isolates the
+content-vs-availability question, which does not depend on the reweighting schedule, so it was
+not rerun with the schedule.) Added to the paper's biological-interpretation subsection.
