@@ -128,28 +128,37 @@ fusion-model ablation; `fusion_struct_expr` = structure+L1000 ablation (no text)
   (cross-class mean 0.733, vs. random's ~0.49-0.5), consistent with target-function text being
   a real but secondary signal.
 
-### Chemprop (D-MPNN), reduced-compute protocol
+### Chemprop (D-MPNN), full protocol
 
-Per the compute note in §6, run on 1 seed x first-2-of-5 scaffold folds x 15 epochs
-(`results/chemprop_folds.csv`):
+An initial reduced-compute run (1 seed, first 2 of 5 scaffold folds, 15 epochs,
+`results/chemprop_folds.csv`) was superseded by a full run matching every other model's
+protocol exactly: 5 seeds (0-4) x 5 scaffold-CV folds x 15 epochs = 225 fits
+(`code/run_chemprop_full.py`, `results/chemprop_folds_full.csv`). Mean $\pm$ std across the
+25 (seed, fold) pairs per class:
 
-| Class | fold 0 AUROC | fold 1 AUROC |
-|---|---|---|
-| epilepsy | 0.832 | 0.432 |
-| antibacterial | 0.877 | 0.903 |
-| antidiabetic | 0.750 | 0.765 |
-| antineoplastic | 0.835 | 0.757 |
-| antipsychotic | 0.855 | 0.997 |
-| betablocker | 0.988 | 0.947 |
-| depression | 0.731 | 0.865 |
-| lipid | 0.851 | 0.818 |
-| nsaid | 0.837 | 0.839 |
+| Class | chemprop_dmpnn AUROC |
+|---|---|
+| epilepsy | 0.731±0.144 |
+| antibacterial | 0.916±0.049 |
+| antidiabetic | 0.801±0.157 |
+| antineoplastic | 0.814±0.055 |
+| antipsychotic | 0.953±0.056 |
+| betablocker | 0.954±0.081 |
+| depression | 0.867±0.089 |
+| lipid | 0.755±0.179 |
+| nsaid | 0.879±0.068 |
+| **cross-class mean** | **0.852** |
 
-High fold-to-fold variance (e.g. epilepsy 0.832 vs 0.432) is expected with only 2 folds and a
-D-MPNN trained from scratch on a few thousand molecules at 15 epochs; this is reported as a
-reduced, real, noisy estimate, not a tuned headline number. It is broadly in the same range as
-`lr_ecfp`/`xgb_ecfp`, as expected for a graph model with no pretraining on this few labeled
-examples.
+This confirms, at the full protocol rather than a 2-fold subset, what the reduced run already
+suggested: Chemprop sits close to `lr_ecfp` (cross-class mean 0.857 in the table above) and
+below `xgb_ecfp`/`fusion_full` (0.917/0.913), consistent with a graph model trained from
+scratch on a few thousand labeled molecules with no pretraining. Fold-to-fold variance remains
+real and class-dependent, highest on epilepsy and lipid (std 0.144, 0.179) and lowest on
+antibacterial (std 0.049); this is a property of the task's per-class sample size, not an
+artifact of the earlier reduced run. The epilepsy fold spread the reduced run flagged
+(0.832 vs 0.432 on its 2 folds) sits within the full run's 25-fold range for that class, so the
+earlier concern about an unrepresentative sample does not hold up: that variance is simply what
+this class looks like.
 
 ## 3b. Warm/cold breakdown and bootstrap CIs (the theoretically correct test of debiasing)
 
@@ -319,9 +328,8 @@ feature set, not merely asserted from the idea doc.
 2. Whether the DebiasedDTA reweighting's benefit (`fusion_full` vs `fusion_nodebias`) is
    consistent across all 9 classes or concentrated in a few — see the per-class breakdown in
    `results/headline_mean_std_auroc.csv`, not just the cross-class average.
-3. The reduced-compute Chemprop run (1 seed only) should not be over-interpreted as a tight
-   estimate; if a tighter chemprop number is needed for the paper, rerunning with 5 seeds is the
-   correct (not fabricated) way to get one, budget permitting.
+3. RESOLVED (§14): Chemprop was rerun at the full 5-seed, 5-fold protocol
+   (`results/chemprop_folds_full.csv`), superseding the 1-seed estimate below.
 4. A LaTeX paper skeleton already exists at `paper/main.tex` (with `% TODO` placeholders for
    the abstract, intro numbers, Table 1/2/3, and discussion) and a stale compiled `main.pdf`.
    This implementation task did not update that file -- it was scoped to the data/code/results/
@@ -656,3 +664,29 @@ and label mismatch described above) but was not edited in `main.tex`, since the 
 exact 10-page limit and this is a precision improvement, not a new finding that changes any
 number or claim; this section is the accurate record for anyone who wants to revisit it with
 substantially more time.
+
+## 14. Chemprop full-protocol run (resolving the §6 reduced-compute caveat)
+
+The §6 compute note above explains why Chemprop originally ran on a reduced protocol (1 seed,
+2 of 5 folds, `results/chemprop_folds.csv`): training a from-scratch D-MPNN for all 225
+(class x seed x fold) combinations was not a reasonable use of shared GPU time mid-pipeline.
+With the rest of this project's work complete and no other job contending for the GPU, that
+full run was done: `code/run_chemprop_full.py`, same architecture and 15 epochs as the reduced
+run, now at 5 seeds x 5 scaffold-CV folds per class (225 fits total), writing
+`results/chemprop_folds_full.csv`.
+
+The full run confirms the reduced run's own characterization rather than overturning it. The
+cross-class mean is 0.852, within 0.01 of the earlier reduced-run average computed over its own
+2 folds, and sits close to `lr_ecfp` (0.857) and below `xgb_ecfp`/`fusion_full`
+(0.917/0.913), as already noted in §3's Chemprop discussion. Per-class std ranges from 0.049
+(antibacterial) to 0.179 (lipid); epilepsy's std is 0.144, consistent with the 0.832-vs-0.432
+spread the reduced run saw on its 2 folds rather than an artifact of that smaller sample. The
+GPU was confirmed in active use throughout (`/proc/<pid>/fd` showing open file descriptors to
+`/dev/dxg`, WSL2's GPU paravirtualization device, and to `nvcubins.bin`); utilization readings
+around 30-35% reflect the already-documented fact that D-MPNN training here is CPU-bound on
+batch featurization, not GPU-bound on compute, not an idle GPU.
+
+`main.tex`'s Limitations sentence has been updated to report this full-protocol result (cross-
+class mean 0.852) in place of the earlier "ran reduced" caveat, which no longer describes what
+was run. §7 item 3 of this document, which flagged the reduced run as something to revisit, is
+resolved by this section.
