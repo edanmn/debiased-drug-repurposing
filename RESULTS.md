@@ -577,6 +577,43 @@ definition as throughout this paper):
   what we could test given the mismatch, not a claim about DRDM's or TAPB's performance on their
   own published benchmarks.
 
+## 11b. Does the joint-training confound reach this paper's own architecture?
+
+Section 11's `multitask_control` isolates "TAPB's correction" from "joint multi-indication
+training" for TAPB's own encoder, but it leaves a narrower question open: is that confound a
+property of joint training in general, or specific to the simpler concatenate-then-project
+encoder TAPB's and DRDM's adaptations share, not this paper's own gated fusion? The Discussion
+section originally stated the pitfall "generalizes past this one comparison," which risks reading
+as a claim about the confound itself rather than just the need to check for it. We ran a second,
+matched control to find out: `JointGatedFusion` in `code/joint_trained_fusion_control.py` reuses
+`fusion_model.ViewEncoder` and `GatedFusion`'s exact gate, with one linear head per indication
+sharing the encoder, trained jointly across all nine with the same embedding size (64), epoch
+count (60), optimizer (Adam, lr=1e-3, weight_decay=1e-4), uniform sample weighting, and
+train-fold-only standardization of the expr/text views as `fusion_nodebias`. Training regime,
+joint versus per-task, is the only thing that changes.
+
+**Results** (epilepsy cold-bucket AUROC, mean ± std over 5 seeds; `results/joint_trained_fusion_control.csv`):
+
+| Model | Cold-bucket AUROC |
+|---|---|
+| fusion_nodebias (per-task) | 0.799 ± 0.053 |
+| fusion_nodebias, joint-trained control | 0.797 ± 0.015 |
+
+**Reading this honestly.** The two numbers are indistinguishable: joint training moves the mean
+by −0.002, well inside either condition's own seed-to-seed noise, and tightens the spread (std
+0.015 against 0.053) rather than inflating anything. On this paper's own encoder, joint
+multi-indication training supplies no measurable boost over per-task training with equally no
+debiasing. That means the confound we flagged in Section 11 does not generalize cleanly to a
+more expressive architecture, at least not as tested here. It does not mean we have shown the
+opposite claim either, that joint training is what inflated `tapb_adapted`'s simpler encoder:
+that would need a per-task version of TAPB's own `DrugEncoder` with no correction, which we did
+not run, since `multitask_control` is joint by construction. What this control does show is
+narrower and still useful: `fusion_full`'s 0.915 headline number is not riding on an undisclosed
+version of the same confound, since training its own undebiased twin jointly produces no change
+worth reporting. We revised the paper's Discussion accordingly, from "the confound generalizes
+past this one comparison" to "the need for this control generalizes; whether the confound itself
+does is architecture-dependent and only confirmed here on a simpler encoder."
+
 ## 12. External review pass: corrections and the text-availability shortcut check
 
 A simulated adversarial RECOMB review (fresh read of the final paper, no prior context) checked
