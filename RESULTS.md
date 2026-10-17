@@ -611,3 +611,48 @@ for the shortcut hypothesis. (Note: this script uses uniform sample weights thro
 `fusion_nodebias`'s setup, not the DebiasedDTA-reweighted `fusion_full`; it isolates the
 content-vs-availability question, which does not depend on the reweighting schedule, so it was
 not rerun with the schedule.) Added to the paper's biological-interpretation subsection.
+
+## 13. TxGNN: a real, time-boxed attempt, and why it still was not run
+
+A reviewer flagged TxGNN's absence as a real gap, not just a disclosed limitation. We spent a
+time-boxed investigation (roughly two hours) trying to get a genuine number rather than leaving
+the disclosure unexamined, and found the original "no checkpoint" framing was imprecise: a
+checkpoint does exist, the actual blocker is elsewhere, and it is a hard one, not a quick fix.
+
+**What we found.** TxGNN (github.com/mims-harvard/TxGNN) does ship an example pretrained
+checkpoint (linked from its README via Google Drive, loadable with `TxGNN.load_pretrained`). The
+real blocker is the dependency chain: the package pins `dgl==0.5.2`, which is not available on
+PyPI (only 0.1.0/0.1.2/0.1.3 and 2.1.0 are, a four-year API gap with no compatible intermediate),
+and was likely only ever distributed through the `dglteam` conda channel for that exact old
+version. The released `TxGNN` PyPI package itself fails to build from source in a clean venv
+(`pip download --no-deps TxGNN` errors with `FileNotFoundError: requirements.txt` inside its own
+setup.py, a packaging bug in the upstream release, not an environment issue on our end). TxGNN
+also wants Python 3.8 specifically; this machine's available interpreters are 3.11/3.12. Getting
+a working environment would mean bootstrapping conda/mamba, hunting for a DGL 0.5.2 build
+compatible with this machine's CUDA 13.3 driver (a 2020-era prebuilt binary against a
+current-generation driver stack, itself uncertain), and likely patching TxGNN's own code to a
+DGL version it was never written against, since the pinned version is simply not obtainable.
+
+**A second, independent problem, found while checking the first.** Even setting the environment
+aside, TxGNN's knowledge graph (built on PrimeKG, 17,080 disease nodes, 7,957 drug/candidate
+nodes) identifies drugs and diseases by its own internal indices, requiring a mapping from our
+compounds' InChIKeys to PrimeKG's drug nodes (plausibly bridgeable via DrugBank IDs through
+UniChem, though PrimeKG does not ship a documented, ready-made InChIKey crosswalk) and, more
+fundamentally, a mapping from our labels to TxGNN's. Our 9 classes are broad therapeutic
+categories (any approved antiepileptic, any approved antidepressant), while TxGNN predicts
+drug-indication links to specific disease entities. Translating "approved for the depression
+category" into "predicted indication for which MONDO disease node(s)" requires aggregating over
+multiple disease sub-entities with no single correct convention, a real methodological choice,
+not just an engineering step, and one that would need to be made and defended even after the
+environment problem is solved.
+
+**Decision.** Stopping here rather than forcing a number. The combination of an unobtainable
+pinned dependency, a broken upstream package build, and an unresolved label-granularity mismatch
+means a real TxGNN comparison is a multi-day project (environment archaeology, a from-scratch
+DrugBank/MONDO identifier bridge, and a defensible category-to-disease aggregation scheme), not
+a bounded addition. The paper's Limitations sentence ("TxGNN was not run... no checkpoint") is
+corrected by this investigation (a checkpoint exists; the real blocker is the dependency chain
+and label mismatch described above) but was not edited in `main.tex`, since the body is at its
+exact 10-page limit and this is a precision improvement, not a new finding that changes any
+number or claim; this section is the accurate record for anyone who wants to revisit it with
+substantially more time.
