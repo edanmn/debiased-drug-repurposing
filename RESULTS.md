@@ -12,7 +12,7 @@ with a reason, per the task's own instruction, rather than filled in with a plau
   compounds) on lowercased/whitespace-normalized compound name. Result: **2,290 compounds**,
   spanning **1,392 unique target gene symbols**. This matches the idea doc's "~2,290" figure
   exactly; that appears to be coincidence (the number was described in the task as "from
-  memory, approximate"), not a sign the join was forced to hit it — the join script
+  memory, approximate"), not a sign the join was forced to hit it: the join script
   (`code/build_targets.py`) applies no filtering beyond "has a non-null Hub target field."
 - **`data/target_function_text.parquet`**: UniProt REST API (`rest.uniprot.org/uniprotkb/search`,
   reviewed human entries, `cc_function` field), fetched for all 1,392 genes with a 6-way
@@ -26,7 +26,7 @@ with a reason, per the task's own instruction, rather than filled in with a plau
   **2,286/2,290 target-annotated compounds (99.8%) got a usable text-view embedding**; the
   remaining 9,878-2,290=7,588 compounds with no Hub target annotation get an explicit
   all-zero sentinel vector plus `text_mask=False` (design choice, not a learned missing
-  embedding — see Limitations). Built by `code/build_text_view.py`.
+  embedding, see Limitations). Built by `code/build_text_view.py`.
 - **Structure view**: `cmp_ecfp.npy` (9,878x2,048 ECFP4), reused unmodified from
   `ICHI2027_mgan/data/` via symlink.
 - **L1000 view**: `cmp_expr.npy` (9,878x978 consensus landmark-gene z-scores), reused
@@ -42,7 +42,7 @@ with a reason, per the task's own instruction, rather than filled in with a plau
   same score used as the zero-training baseline. Per DebiasedDTA (literature_review.md #1), a
   1-feature logistic-regression guide wrapping this similarity score is cross-validated inside
   each outer training fold (`code/guide.py:guide_importance_weights`; R=5 repeats of 5-fold CV,
-  reduced from the original paper's 10 repeats for compute budget — documented, not hidden) to
+  reduced from the original paper's 10 repeats for compute budget, documented, not hidden) to
   produce a per-sample out-of-fold squared-error-based importance coefficient, normalized to
   mean 1. Samples the chemical-similarity guide already explains well get a LOW coefficient;
   samples it cannot explain get a HIGH one.
@@ -58,7 +58,7 @@ with a reason, per the task's own instruction, rather than filled in with a plau
   initially fed into the MLP unnormalized, at a very different numeric scale than the binary
   ECFP view. This caused the single-view `text_only` ablation to produce rankings worse than
   random (AUROC well below 0.5) despite epilepsy positives having *more* target-text coverage
-  than negatives (22/31 positives vs. 2,264/9,847 negatives have a target annotation) — i.e. the
+  than negatives (22/31 positives vs. 2,264/9,847 negatives have a target annotation): the
   feature really was informative, but the un-normalized MLP learned a saturated, inverted
   mapping. Fixed by z-scoring each continuous view on TRAIN-fold statistics only
   (`code/datalib.py:standardize_view`), with the "no target annotation" sentinel forced back to
@@ -69,9 +69,9 @@ with a reason, per the task's own instruction, rather than filled in with a plau
   from scratch on this project's own scaffold-grouped splits); target-knowledge-only ablation
   (text view alone, no chemistry); Chemprop D-MPNN (see §6 for the version/compute caveat).
 - **Ablations**: `fusion_struct` (structure only), `fusion_struct_expr` (structure+L1000, no
-  text), `fusion_nodebias` (all 3 views, uniform sample weights throughout — isolates what the
-  DebiasedDTA reweighting itself contributes), `fusion_full` (all 3 views, DebiasedDTA-reweighted
-  — the proposed method).
+  text), `fusion_nodebias` (all 3 views, uniform sample weights throughout, isolates what the
+  DebiasedDTA reweighting itself contributes), `fusion_full` (all 3 views, DebiasedDTA-reweighted,
+  the proposed method).
 - **Splits**: Murcko-scaffold-grouped stratified 5-fold CV (`StratifiedGroupKFold` on the
   `scaffold` column already in `compounds.parquet`), 5 seeds (0-4), for all nine classes =
   225 outer folds per model variant.
@@ -89,44 +89,50 @@ fusion-model ablation; `fusion_struct_expr` = structure+L1000 ablation (no text)
 
 | Class | nn_tanimoto | lr_ecfp | xgb_ecfp | text_only | fusion_struct | fusion_struct_expr | fusion_nodebias | **fusion_full** |
 |---|---|---|---|---|---|---|---|---|
-| epilepsy | 0.732±0.008 | 0.803±0.014 | 0.870±0.006 | 0.641±0.059 | 0.890±0.003 | 0.647±0.017 | 0.826±0.011 | **0.851±0.021** |
-| antibacterial | 0.917±0.006 | 0.955±0.008 | 0.970±0.004 | 0.612±0.023 | 0.899±0.011 | 0.760±0.055 | 0.849±0.042 | **0.890±0.016** |
-| antidiabetic | 0.841±0.022 | 0.854±0.023 | 0.912±0.017 | 0.740±0.077 | 0.752±0.007 | 0.751±0.030 | 0.918±0.004 | **0.932±0.014** |
-| antineoplastic | 0.728±0.014 | 0.729±0.007 | 0.840±0.012 | 0.686±0.031 | 0.589±0.015 | 0.843±0.006 | 0.908±0.006 | **0.899±0.010** |
-| antipsychotic | 0.970±0.012 | 0.951±0.016 | 0.962±0.015 | 0.901±0.039 | 0.827±0.013 | 0.724±0.025 | 0.975±0.003 | **0.968±0.004** |
-| betablocker | 0.982±0.006 | 0.995±0.002 | 0.991±0.005 | 0.833±0.049 | 0.916±0.015 | 0.840±0.022 | 0.992±0.001 | **0.978±0.011** |
-| depression | 0.897±0.009 | 0.830±0.011 | 0.914±0.004 | 0.812±0.015 | 0.838±0.006 | 0.775±0.039 | 0.966±0.002 | **0.955±0.012** |
-| lipid | 0.830±0.029 | 0.761±0.024 | 0.881±0.015 | 0.598±0.037 | 0.779±0.017 | 0.650±0.019 | 0.888±0.012 | **0.836±0.027** |
-| nsaid | 0.890±0.023 | 0.833±0.037 | 0.911±0.018 | 0.771±0.046 | 0.871±0.004 | 0.595±0.024 | 0.896±0.016 | **0.907±0.031** |
-| **cross-class mean** | 0.865 | 0.857 | 0.917 | 0.733 | 0.818 | 0.732 | 0.913 | **0.913** |
+| epilepsy | 0.735±0.010 | 0.803±0.010 | 0.868±0.005 | 0.633±0.058 | 0.887±0.002 | 0.647±0.017 | 0.818±0.009 | **0.847±0.016** |
+| antibacterial | 0.917±0.005 | 0.955±0.006 | 0.969±0.004 | 0.616±0.022 | 0.898±0.010 | 0.760±0.050 | 0.848±0.038 | **0.888±0.015** |
+| antidiabetic | 0.839±0.015 | 0.845±0.016 | 0.898±0.017 | 0.737±0.073 | 0.742±0.008 | 0.748±0.024 | 0.915±0.008 | **0.933±0.010** |
+| antineoplastic | 0.728±0.013 | 0.730±0.007 | 0.839±0.011 | 0.679±0.025 | 0.589±0.012 | 0.843±0.005 | 0.907±0.003 | **0.896±0.010** |
+| antipsychotic | 0.968±0.016 | 0.947±0.014 | 0.945±0.024 | 0.906±0.040 | 0.825±0.011 | 0.716±0.014 | 0.971±0.003 | **0.965±0.004** |
+| betablocker | 0.987±0.004 | 0.995±0.001 | 0.992±0.004 | 0.849±0.029 | 0.924±0.010 | 0.771±0.020 | 0.995±0.001 | **0.968±0.012** |
+| depression | 0.897±0.010 | 0.831±0.011 | 0.911±0.004 | 0.817±0.013 | 0.838±0.005 | 0.774±0.035 | 0.963±0.001 | **0.953±0.010** |
+| lipid | 0.829±0.028 | 0.761±0.026 | 0.859±0.025 | 0.610±0.032 | 0.778±0.017 | 0.647±0.017 | 0.886±0.010 | **0.834±0.025** |
+| nsaid | 0.893±0.017 | 0.837±0.034 | 0.908±0.016 | 0.754±0.034 | 0.869±0.005 | 0.588±0.024 | 0.890±0.007 | **0.899±0.031** |
+| **cross-class mean** | 0.866 | 0.856 | 0.910 | 0.733 | 0.816 | 0.722 | 0.910 | **0.909** |
+
+(Corrected 2026-10-17: the table above previously carried a stale pre-fix set of numbers that
+no longer matched `results/headline_mean_std_auroc.csv` or the already-corrected table in
+`paper/main.tex`. Replaced with values read directly from that CSV; the bullets below are
+updated to match.)
 
 **Honest reading of this table**:
-- The zero-training NN-Tanimoto guide is already strong (cross-class mean 0.865), confirming
+- The zero-training NN-Tanimoto guide is already strong (cross-class mean 0.866), confirming
   the idea's premise that near-analog similarity explains a large share of apparent accuracy.
-  It is weakest on antineoplastic (0.728) and epilepsy (0.732) — the two classes where the
-  chemistry is most scaffold-diverse — and strongest on antipsychotic/betablocker (0.97-0.98),
-  classes dominated by a few tight chemical series.
-- `fusion_full` (proposed) beats `nn_tanimoto` on 7/9 classes (all but betablocker and
-  antipsychotic, the two near-analog-dominated classes where there is little residual to find),
-  with the largest margins on antineoplastic (+0.171) and epilepsy (+0.119).
-- **`fusion_full` vs `fusion_nodebias` (debiasing ablation) is the critical comparison, and the
-  honest result is: debiasing gives a small, inconsistent effect at the overall-AUROC level**
-  (cross-class mean identical, 0.913 vs 0.913; fusion_full wins on antidiabetic, nsaid,
-  epilepsy; fusion_nodebias wins on antibacterial, antineoplastic, antipsychotic, betablocker,
-  depression, lipid, several within 1 std of each other). This does NOT support a strong,
-  uniform "debiasing helps" headline claim at the pooled-AUROC level. See the warm/cold
-  breakdown below, which is the more theoretically appropriate test (debiasing is designed to
-  help specifically on low-similarity/cold cases, not to raise pooled AUROC that is dominated
-  by easy warm cases) -- do not report the idea doc's "0.73 vs 0.56" figure as reproduced
-  without checking that breakdown.
+  It is weakest on antineoplastic (0.728) and epilepsy (0.735), the two classes where the
+  chemistry is most scaffold-diverse, and strongest on antipsychotic/betablocker (0.968 to
+  0.987), classes dominated by a few tight chemical series.
+- `fusion_full` (proposed) beats `nn_tanimoto` on 6/9 classes (all but antibacterial,
+  antipsychotic, and betablocker, the three near-analog-dominated classes where there is
+  little residual to find), with the largest margins on antineoplastic (+0.168) and epilepsy
+  (+0.112).
+- `fusion_full` vs `fusion_nodebias` (debiasing ablation) is the critical comparison, and the
+  honest result is that debiasing gives a small, inconsistent effect at the overall-AUROC
+  level: cross-class mean 0.909 vs 0.910, essentially a tie. `fusion_full` wins on epilepsy,
+  antibacterial, antidiabetic, and nsaid; `fusion_nodebias` wins on antineoplastic,
+  antipsychotic, betablocker, depression, and lipid, most deltas within 1-2 std of each other.
+  This does NOT support a strong, uniform "debiasing helps" headline claim at the pooled-AUROC
+  level. See the warm/cold breakdown below, which is the more theoretically appropriate test
+  (debiasing is designed to help specifically on low-similarity/cold cases, not to raise pooled
+  AUROC that is dominated by easy warm cases); do not report the idea doc's "0.73 vs 0.56"
+  figure as reproduced without checking that breakdown.
 - `fusion_struct_expr` (structure+L1000, no text) sometimes underperforms `fusion_struct`
-  alone (e.g., epilepsy 0.647 vs 0.890; nsaid 0.595 vs 0.871) and sometimes outperforms it
+  alone (e.g., epilepsy 0.647 vs 0.887; nsaid 0.588 vs 0.869) and sometimes outperforms it
   substantially (antineoplastic 0.843 vs 0.589). This is a genuine, reported ablation finding:
   the L1000 view's value is class-dependent, not uniformly additive, when added without the
   text view and without debiasing.
 - `text_only` (no chemistry) is informative but the weakest learned model everywhere
-  (cross-class mean 0.733, vs. random's ~0.49-0.5), consistent with target-function text being
-  a real but secondary signal.
+  (cross-class mean 0.733, against random's roughly 0.49 to 0.5), consistent with
+  target-function text being a real but secondary signal.
 
 ### Chemprop (D-MPNN), full protocol
 
@@ -150,8 +156,8 @@ protocol exactly: 5 seeds (0-4) x 5 scaffold-CV folds x 15 epochs = 225 fits
 | **cross-class mean** | **0.852** |
 
 This confirms, at the full protocol rather than a 2-fold subset, what the reduced run already
-suggested: Chemprop sits close to `lr_ecfp` (cross-class mean 0.857 in the table above) and
-below `xgb_ecfp`/`fusion_full` (0.917/0.913), consistent with a graph model trained from
+suggested: Chemprop sits close to `lr_ecfp` (cross-class mean 0.856 in the table above) and
+below `xgb_ecfp`/`fusion_full` (0.910/0.909), consistent with a graph model trained from
 scratch on a few thousand labeled molecules with no pretraining. Fold-to-fold variance remains
 real and class-dependent, highest on epilepsy and lipid (std 0.144, 0.179) and lowest on
 antibacterial (std 0.049); this is a property of the task's per-class sample size, not an
@@ -241,7 +247,7 @@ cross-class mean comparison bar chart.
 
 ## 4. Leakage audit (PubMed abstracts)
 
-**Completed, reproduced computationally** — `code/leakage_audit.py`,
+**Completed, reproduced computationally**: `code/leakage_audit.py`,
 `results/leakage_audit_summary.csv`, `results/leakage_audit_top_terms_{unmasked,masked}.csv`.
 
 Cohort: 30 known AEDs (`data/known_aeds.csv`) with a numeric FDA approval year, vs. 29 non-AED
@@ -270,7 +276,7 @@ of OTHER AEDs: **lorazepam, midazolam, diazepam, carbamazepine, gabapentin, valp
 clonazepam, vigabatrin**, plus `gaba`. This directly confirms the idea doc's leakage hypothesis
 computationally: pre-approval PubMed text about a drug predicts its (not-yet-assigned) AED label
 primarily because papers about a future AED already co-mention other, already-approved AEDs
-(comparator drugs in the same case reports/reviews/trials) — exactly the same-class-mention
+(comparator drugs in the same case reports/reviews/trials), exactly the same-class-mention
 leakage mechanism described in the two clinical-ML label-leakage papers cited in
 literature_review.md (#14 JAMIA 2023, #15 JAMA Network Open 2025), transposed from ICD-code
 co-occurrence to drug-name co-occurrence. **Caveat**: n=59 is small (this is a hard-to-scale,
@@ -321,12 +327,12 @@ feature set, not merely asserted from the idea doc.
 ## 7. What a human should double-check before this goes into a paper draft
 
 1. The exact wording/numbers in §4 (leakage audit) once re-verified against
-   `results/leakage_audit_summary.csv` and `results/leakage_audit_cohort.csv` directly — the
+   `results/leakage_audit_summary.csv` and `results/leakage_audit_cohort.csv` directly: the
    n=59 corpus is small and PubMed date-restriction via `mindate`/`maxdate` on `pdat` is a
    reasonable but not perfect proxy for "before approval" (it reflects publication date, not
    necessarily first public knowledge of the compound).
 2. Whether the DebiasedDTA reweighting's benefit (`fusion_full` vs `fusion_nodebias`) is
-   consistent across all 9 classes or concentrated in a few — see the per-class breakdown in
+   consistent across all 9 classes or concentrated in a few: see the per-class breakdown in
    `results/headline_mean_std_auroc.csv`, not just the cross-class average.
 3. RESOLVED (§14): Chemprop was rerun at the full 5-seed, 5-fold protocol
    (`results/chemprop_folds_full.csv`), superseding the 1-seed estimate below.
@@ -667,26 +673,18 @@ substantially more time.
 
 ## 14. Chemprop full-protocol run (resolving the §6 reduced-compute caveat)
 
-The §6 compute note above explains why Chemprop originally ran on a reduced protocol (1 seed,
-2 of 5 folds, `results/chemprop_folds.csv`): training a from-scratch D-MPNN for all 225
-(class x seed x fold) combinations was not a reasonable use of shared GPU time mid-pipeline.
-With the rest of this project's work complete and no other job contending for the GPU, that
-full run was done: `code/run_chemprop_full.py`, same architecture and 15 epochs as the reduced
-run, now at 5 seeds x 5 scaffold-CV folds per class (225 fits total), writing
-`results/chemprop_folds_full.csv`.
+The §6 compute note explains why Chemprop originally ran on a reduced protocol (1 seed, 2 of 5
+folds): a from-scratch D-MPNN over all 225 (class x seed x fold) combinations was not a
+reasonable use of shared GPU time mid-pipeline. With the rest of this project's work complete
+and no other job contending for the GPU, that full run was done
+(`code/run_chemprop_full.py`, 5 seeds x 5 scaffold-CV folds per class, 225 fits total); the
+per-class table and discussion are in §3's "Chemprop (D-MPNN), full protocol" subsection, not
+repeated here.
 
-The full run confirms the reduced run's own characterization rather than overturning it. The
-cross-class mean is 0.852, within 0.01 of the earlier reduced-run average computed over its own
-2 folds, and sits close to `lr_ecfp` (0.857) and below `xgb_ecfp`/`fusion_full`
-(0.917/0.913), as already noted in §3's Chemprop discussion. Per-class std ranges from 0.049
-(antibacterial) to 0.179 (lipid); epilepsy's std is 0.144, consistent with the 0.832-vs-0.432
-spread the reduced run saw on its 2 folds rather than an artifact of that smaller sample. The
-GPU was confirmed in active use throughout (`/proc/<pid>/fd` showing open file descriptors to
-`/dev/dxg`, WSL2's GPU paravirtualization device, and to `nvcubins.bin`); utilization readings
-around 30-35% reflect the already-documented fact that D-MPNN training here is CPU-bound on
-batch featurization, not GPU-bound on compute, not an idle GPU.
-
-`main.tex`'s Limitations sentence has been updated to report this full-protocol result (cross-
-class mean 0.852) in place of the earlier "ran reduced" caveat, which no longer describes what
-was run. §7 item 3 of this document, which flagged the reduced run as something to revisit, is
-resolved by this section.
+The GPU was confirmed in active use throughout (`/proc/<pid>/fd` showing open file descriptors
+to `/dev/dxg`, WSL2's GPU paravirtualization device, and to `nvcubins.bin`); utilization
+readings around 30-35% reflect the already-documented fact that D-MPNN training here is
+CPU-bound on batch featurization, not GPU-bound on compute, not an idle GPU. `main.tex`'s
+Limitations sentence has been updated to report the full-protocol result in place of the
+earlier "ran reduced" caveat, which no longer describes what was run. §7 item 3 of this
+document, which flagged the reduced run as something to revisit, is resolved by this section.

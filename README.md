@@ -30,12 +30,14 @@ ready to push in one step once the authors confirm it should be made public.
 
 ## Before this repository is made public
 
-- Replace the symlinked paths in `data/` with either the real files or a fetch script, so the
-  repository is self-contained for an external reader (currently it depends on a sibling project's
-  directory on the original author's machine).
-- Resolve the remaining `AUTHOR ACTION REQUIRED` item in `paper/main.tex` (code-availability URL).
+- Still open: 14 files under `data/` are tracked as symlinks into a sibling project
+  (`ICHI2027_mgan/data/`) on the original author's machine; a clone of this repository alone
+  gets broken links for those paths. Replace them with the real files, a fetch script, or a
+  hosted-data release before relying on this repo for reproducibility.
+- Done: `paper/main.tex`'s code-availability URL now points to the live, pushed repository
+  (`https://github.com/edanmn/debiased-drug-repurposing`), confirmed reachable.
 - Confirm no large raw LINCS `.gctx` files or other multi-gigabyte intermediates are swept in by an
-  unqualified `git add`.
+  unqualified `git add` (none found as of this check).
 
 ## Reproducing
 
