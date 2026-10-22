@@ -1,0 +1,21 @@
+[epilepsy] LINCS-only subset of expanded pool: n=9878 n_pos=31
+[epilepsy] mean cold n_pos/seed=6.20 usable_seeds=5/5 mean_delta=+0.090 std=0.036
+[antibacterial] LINCS-only subset of expanded pool: n=9878 n_pos=102
+[antibacterial] mean cold n_pos/seed=6.20 usable_seeds=5/5 mean_delta=-0.031 std=0.067
+[antidiabetic] LINCS-only subset of expanded pool: n=9878 n_pos=26
+[antidiabetic] mean cold n_pos/seed=2.20 usable_seeds=5/5 mean_delta=+0.019 std=0.020
+[antineoplastic] LINCS-only subset of expanded pool: n=9878 n_pos=137
+[antineoplastic] mean cold n_pos/seed=26.00 usable_seeds=5/5 mean_delta=-0.034 std=0.049
+[antipsychotic] LINCS-only subset of expanded pool: n=9878 n_pos=43
+[antipsychotic] mean cold n_pos/seed=0.40 usable_seeds=2/5 mean_delta=-0.006 std=0.006
+[betablocker] LINCS-only subset of expanded pool: n=9878 n_pos=21
+[betablocker] n/a
+[depression] LINCS-only subset of expanded pool: n=9878 n_pos=53
+[depression] mean cold n_pos/seed=0.20 usable_seeds=1/5 mean_delta=-0.025 std=nan
+[lipid] LINCS-only subset of expanded pool: n=9878 n_pos=20
+[lipid] mean cold n_pos/seed=2.20 usable_seeds=5/5 mean_delta=-0.006 std=0.013
+[nsaid] LINCS-only subset of expanded pool: n=9878 n_pos=37
+[nsaid] mean cold n_pos/seed=1.60 usable_seeds=5/5 mean_delta=+0.029 std=0.056
+
+Wrote results/cold_delta_per_seed_reliability_expanded_lincsonly.csv
+DONE in 620.5s
